@@ -36,13 +36,13 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         setupAccount();
 
 
-        SharedPreferences mPref = PreferenceManager.getDefaultSharedPreferences(this);
-        boolean doListen = mPref.getBoolean(Constant.PREF_DO_LISTEN, true);
-        Log.d(TAG, "doListen: " + String.valueOf(doListen));
-        Log.d(TAG, "service running: " + String.valueOf(isMyServiceRunning(OrderListenService.class)));
-        if (doListen && !isMyServiceRunning(OrderListenService.class)) {
-            startService(new Intent(this, OrderListenService.class));
-        }
+//        SharedPreferences mPref = PreferenceManager.getDefaultSharedPreferences(this);
+//        boolean doListen = mPref.getBoolean(Constant.PREF_DO_LISTEN, true);
+//        Log.d(TAG, "doListen: " + String.valueOf(doListen));
+//        Log.d(TAG, "service running: " + String.valueOf(isMyServiceRunning(OrderListenService.class)));
+//        if (doListen && !isMyServiceRunning(OrderListenService.class)) {
+//            startService(new Intent(this, OrderListenService.class));
+//        }
     }
 
     @Override

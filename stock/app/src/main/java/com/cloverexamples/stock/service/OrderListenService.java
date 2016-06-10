@@ -86,26 +86,34 @@ public class OrderListenService extends Service implements OrderConnector.OnOrde
         Log.d(TAG, "onPaymentProcessed");
 //        Toast.makeText(this, "onPaymentProcessed", Toast.LENGTH_SHORT).show();
 //        Toast.makeText(this.getApplicationContext(), "onPaymentProcessed", Toast.LENGTH_SHORT).show();
-        sendNotification(this, orderId);
+//        sendNotification(this, orderId);
 //        sendNotification(getApplicationContext(), orderId);
+        broadcast(orderId);
     }
 
-    private void sendNotification(Context context, String orderId) {
-        PendingIntent contentIntent = PendingIntent.getActivity(context, 0,
-                new Intent(context, MainActivity.class), 0);
-
-        NotificationCompat.Builder mBuilder =
-                new NotificationCompat.Builder(context)
-                        .setSmallIcon(R.drawable.app_icon)
-                        .setContentTitle("Stock notification")
-                        .setContentText(orderId);
-        mBuilder.setContentIntent(contentIntent);
-        mBuilder.setDefaults(Notification.DEFAULT_SOUND);
-        mBuilder.setAutoCancel(true);
-        NotificationManager mNotificationManager =
-                (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-        mNotificationManager.notify(1, mBuilder.build());
+    private void broadcast(String orderId) {
+        Intent it = new Intent("stock.service.broadcast");
+        it.putExtra(Constant.EXTRA_NOTIF_CONTENT, orderId);
+        it.putExtra(Constant.EXTRA_NOTIF_TITLE, "Stock Notification");
+        sendBroadcast(it);
     }
+
+//    private void sendNotification(Context context, String orderId) {
+//        PendingIntent contentIntent = PendingIntent.getActivity(context, 0,
+//                new Intent(context, MainActivity.class), 0);
+//
+//        NotificationCompat.Builder mBuilder =
+//                new NotificationCompat.Builder(context)
+//                        .setSmallIcon(R.drawable.app_icon)
+//                        .setContentTitle("Stock notification")
+//                        .setContentText(orderId);
+//        mBuilder.setContentIntent(contentIntent);
+//        mBuilder.setDefaults(Notification.DEFAULT_SOUND);
+//        mBuilder.setAutoCancel(true);
+//        NotificationManager mNotificationManager =
+//                (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+//        mNotificationManager.notify(1, mBuilder.build());
+//    }
 
     @Nullable
     @Override
