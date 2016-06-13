@@ -36,21 +36,13 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         setupAccount();
 
 
-//        SharedPreferences mPref = PreferenceManager.getDefaultSharedPreferences(this);
-//        boolean doListen = mPref.getBoolean(Constant.PREF_DO_LISTEN, true);
-//        Log.d(TAG, "doListen: " + String.valueOf(doListen));
-//        Log.d(TAG, "service running: " + String.valueOf(isMyServiceRunning(OrderListenService.class)));
-//        if (doListen && !isMyServiceRunning(OrderListenService.class)) {
-//            startService(new Intent(this, OrderListenService.class));
-//        }
+
     }
 
     @Override
     protected void onResume() {
         Log.d(TAG, "onResume");
         super.onResume();
-
-
     }
 
     @Override
@@ -62,7 +54,6 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     @Override
     protected void onDestroy() {
         Log.d(TAG, "onDestroy");
-        Log.d(TAG, "after destroy, service running: " + String.valueOf(isMyServiceRunning(OrderListenService.class)));
         super.onDestroy();
     }
 
@@ -76,16 +67,6 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
                 finish();
             }
         }
-    }
-
-    private boolean isMyServiceRunning(Class<?> serviceClass) {
-        ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
-        for (ActivityManager.RunningServiceInfo service: manager.getRunningServices(Integer.MAX_VALUE)) {
-            if (serviceClass.getName().equals(service.service.getClassName())) {
-                return true;
-            }
-        }
-        return false;
     }
 
     @Override
