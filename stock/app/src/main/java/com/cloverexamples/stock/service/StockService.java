@@ -24,38 +24,26 @@ import com.clover.sdk.v1.ClientException;
 import com.clover.sdk.v1.Intents;
 import com.clover.sdk.v1.ServiceException;
 import com.clover.sdk.v3.inventory.InventoryConnector;
-import com.clover.sdk.v3.inventory.Item;
-import com.clover.sdk.v3.inventory.ItemStock;
 import com.clover.sdk.v3.order.LineItem;
 import com.clover.sdk.v3.order.Order;
 import com.clover.sdk.v3.order.OrderConnector;
 import com.cloverexamples.stock.R;
 import com.cloverexamples.stock.activity.MainActivity;
 import com.cloverexamples.stock.utils.Constant;
-import com.cloverexamples.stock.utils.Utils;
-import com.loopj.android.http.AsyncHttpClient;
-import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.JsonHttpResponseHandler;
-import com.loopj.android.http.ResponseHandlerInterface;
 import com.loopj.android.http.SyncHttpClient;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import cz.msebera.android.httpclient.Header;
-import cz.msebera.android.httpclient.HttpEntity;
-import cz.msebera.android.httpclient.HttpResponse;
-import cz.msebera.android.httpclient.client.HttpClient;
-import cz.msebera.android.httpclient.client.methods.HttpGet;
 import cz.msebera.android.httpclient.entity.StringEntity;
-import cz.msebera.android.httpclient.impl.client.DefaultHttpClient;
 import cz.msebera.android.httpclient.message.BasicHeader;
 import cz.msebera.android.httpclient.protocol.HTTP;
 
@@ -74,82 +62,19 @@ public class StockService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        Log.d(TAG, "onStartCommand");
         setupAccount();
-
         connect();
-
-//        String orderId = intent.getStringExtra(Intents.EXTRA_CLOVER_ORDER_ID);
-//        try {
-//            // Use mAccount to get the access token (and other Clover authentication data)
-//            mCloverAuth = CloverAuth.authenticate(StockService.this, mAccount);
-//            Log.d(TAG, mCloverAuth.authToken);
-//
-//            final Map<String, Integer> idToCount = new HashMap<>();
-//            Order order = mOrderConnector.getOrder(orderId);
-//            List<LineItem> lineItems = order.getLineItems();
-//            for (LineItem lineItem: lineItems) {
-//                String itemId = lineItem.getItem().getId();
-//                if (idToCount.containsKey(itemId)) {
-//                    idToCount.put(itemId, idToCount.get(itemId) + 1);
-//                } else {
-//                    idToCount.put(itemId, 1);
-//                }
-//            }
-//            counter = idToCount.size();
-//
-//            for (final String itemId: idToCount.keySet()) {
-//                final String url = baseUrl + mCloverAuth.merchantId + itemStockUrl + itemId;
-//
-//                AsyncHttpClient getClient = new AsyncHttpClient();
-//                getClient.addHeader(Constant.HTTP_HEADER_KEY_AUTH, Constant.HTTP_HEADER_VAL_AUTH + mCloverAuth.authToken);
-//                getClient.get(url, new AsyncHttpResponseHandler() {
-//                    @Override
-//                    public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
-//                        postRequest(responseBody, itemId, url, idToCount);
-//                    }
-//
-//                    @Override
-//                    public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
-//
-//                    }
-//                });
-//            }
-//        } catch (RemoteException e) {
-//            e.printStackTrace();
-//        } catch (ClientException e) {
-//            e.printStackTrace();
-//        } catch (ServiceException e) {
-//            e.printStackTrace();
-//        } catch (BindingException e) {
-//            e.printStackTrace();
-//        } catch (OperationCanceledException e) {
-//            e.printStackTrace();
-//        } catch (AuthenticatorException e) {
-//            e.printStackTrace();
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-
-        new DataAsyncTask().execute(intent.getStringExtra(Intents.EXTRA_CLOVER_ORDER_ID));
-
-
+        new DataProcessingTask().execute(intent.getStringExtra(Intents.EXTRA_CLOVER_ORDER_ID));
         return super.onStartCommand(intent, flags, startId);
-//        return START_NOT_STICKY;
-//        return START_STICKY;
     }
 
-
-
-    private class DataAsyncTask extends AsyncTask<String, Void, Void> {
-
+    private class DataProcessingTask extends AsyncTask<String, Void, Void> {
         @Override
         protected Void doInBackground(String... orderId) {
             try {
-                // Use mAccount to get the access token (and other Clover authentication data)
+                // call CloverAuth.authenticate to get the auth token
                 mCloverAuth = CloverAuth.authenticate(StockService.this.getApplicationContext(), mAccount);
-                Log.d(TAG, mCloverAuth.authToken);
-                Log.d(TAG, "Auth Result: " + mCloverAuth.errorMessage);
+//                Log.d(TAG, mCloverAuth.authToken);
 
                 final Map<String, Integer> idToCount = new HashMap<>();
                 Order order = mOrderConnector.getOrder(orderId[0]);
@@ -166,49 +91,21 @@ public class StockService extends Service {
 
                 for (final String itemId: idToCount.keySet()) {
                     final String url = baseUrl + mCloverAuth.merchantId + itemStockUrl + itemId;
-//                    final String url  = "http://requestb.in/1mqevp31";
-                    HttpClient getClient = new DefaultHttpClient();
-                    HttpGet getRequest = new HttpGet(url);
-                    getRequest.setHeader(Constant.HTTP_HEADER_KEY_AUTH, Constant.HTTP_HEADER_VAL_AUTH + mCloverAuth.authToken);
-//                    get.setHeader(Constant.HTTP_HEADER_KEY_CONTENT_TYPE, Constant.HTTP_HEADER_VAL_CONTENT_TYPE);
-                    HttpResponse response = getClient.execute(getRequest);
 
-                    InputStream in = response.getEntity().getContent();
-                    String str = Utils.convertStreamToString(in);
-                    Log.d(TAG, "Read from Server: " + str);
-                    JSONObject itemStock = new JSONObject(str);
+                    SyncHttpClient getClient = new SyncHttpClient();
+                    getClient.addHeader(Constant.HTTP_HEADER_KEY_AUTH, Constant.HTTP_HEADER_VAL_AUTH + mCloverAuth.authToken);
+                    getClient.get(url, new JsonHttpResponseHandler() {
+                        @Override
+                        public void onSuccess(int statusCode, Header[] headers, JSONObject itemStock) {
+                            Log.d(TAG, "Http GET onSuccess");
+                            postRequest(itemStock, itemId, url, idToCount);
+                        }
 
-                    postRequest(itemStock, itemId, url, idToCount);
+                        @Override
+                        public void onFailure(int statusCode, Header[] headers, Throwable e, JSONObject errorResponse) {
 
-
-
-//                    SyncHttpClient getClient = new SyncHttpClient();
-//                    getClient.addHeader(Constant.HTTP_HEADER_KEY_AUTH, Constant.HTTP_HEADER_VAL_AUTH + mCloverAuth.authToken);
-//                    getClient.get(url, new JsonHttpResponseHandler() {
-//                        @Override
-//                        public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-//                            Log.d(TAG, "Http GET onSuccess");
-//                            postRequest(response, itemId, url, idToCount);
-//                        }
-//
-//
-//                        @Override
-//                        public void onFailure(int statusCode, Header[] headers, Throwable e, JSONObject errorResponse) {
-//
-//                        }
-//                    });
-
-//                    getClient.get(url, new AsyncHttpResponseHandler() {
-//                        @Override
-//                        public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
-//                            postRequest(responseBody, itemId, url, idToCount);
-//                        }
-//
-//                        @Override
-//                        public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
-//
-//                        }
-//                    });
+                        }
+                    });
                 }
             } catch (RemoteException e) {
                 e.printStackTrace();
@@ -227,21 +124,14 @@ public class StockService extends Service {
             }
             catch (IOException e) {
                 e.printStackTrace();
-            } catch (JSONException e) {
-                e.printStackTrace();
             }
-            return null;
-        }
 
-        @Override
-        protected void onPostExecute(Void result) {
-//            finishService();
+            return null;
         }
     }
 
     private void postRequest(JSONObject itemStock, final String itemId, String url, Map<String, Integer> idToCount) {
         try {
-//            JSONObject itemStock = new JSONObject(new String(responseBody));
             final int newQty = itemStock.has(Constant.JSON_QUANTITY)
                     ? itemStock.getInt(Constant.JSON_QUANTITY) - idToCount.get(itemId)
                     : - idToCount.get(itemId);
@@ -249,7 +139,6 @@ public class StockService extends Service {
 
             SyncHttpClient postClient = new SyncHttpClient();
             postClient.addHeader(Constant.HTTP_HEADER_KEY_AUTH, Constant.HTTP_HEADER_VAL_AUTH + mCloverAuth.authToken);
-            postClient.addHeader(Constant.HTTP_HEADER_KEY_CONTENT_TYPE, Constant.HTTP_HEADER_VAL_CONTENT_TYPE);
 
 
             JSONObject itemJson = new JSONObject();
@@ -285,42 +174,12 @@ public class StockService extends Service {
                     }
                 }
 
-
                 @Override
                 public void onFailure(int statusCode, Header[] headers, Throwable e, JSONObject errorResponse) {
 
                 }
             });
 
-//            postClient.post(StockService.this, url, entity, Constant.HTTP_HEADER_VAL_CONTENT_TYPE, new AsyncHttpResponseHandler() {
-//                @Override
-//                public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
-//                    Log.d(TAG, "Http POST onSuccess: " + itemId);
-//
-//                    try {
-//                        counter--;
-//                        if (newQty < 4) {
-//                            sendNotification(mInventoryConnector.getItem(itemId).getName(), newQty);
-//                        }
-//                        if (counter == 0) {
-//                            finishService();
-//                        }
-//                    } catch (ClientException e) {
-//                        e.printStackTrace();
-//                    } catch (ServiceException e) {
-//                        e.printStackTrace();
-//                    } catch (BindingException e) {
-//                        e.printStackTrace();
-//                    } catch (RemoteException e) {
-//                        e.printStackTrace();
-//                    }
-//                }
-//
-//                @Override
-//                public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
-//
-//                }
-//            });
         } catch (JSONException e) {
             e.printStackTrace();
         } catch (UnsupportedEncodingException e) {
@@ -337,17 +196,6 @@ public class StockService extends Service {
                 Toast.makeText(this, Constant.ERROR_NO_ACCOUNT, Toast.LENGTH_SHORT).show();
                 stopSelf();
             }
-
-//            try {
-//                mCloverAuth = CloverAuth.authenticate(StockService.this, mAccount);
-//                Log.d(TAG, mCloverAuth.authToken);
-//            } catch (OperationCanceledException e) {
-//                e.printStackTrace();
-//            } catch (AuthenticatorException e) {
-//                e.printStackTrace();
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            }
         }
     }
 
@@ -393,7 +241,6 @@ public class StockService extends Service {
         mBuilder.setAutoCancel(true);
         NotificationManager mNotificationManager =
                 (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-        Log.d(TAG, "Clover Notify");
         mNotificationManager.notify(1, mBuilder.build());
     }
 

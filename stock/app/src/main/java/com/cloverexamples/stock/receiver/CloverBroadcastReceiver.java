@@ -7,7 +7,6 @@ import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
 import com.clover.sdk.v1.Intents;
-import com.cloverexamples.stock.service.StockAPIService;
 import com.cloverexamples.stock.service.StockService;
 import com.cloverexamples.stock.utils.Constant;
 
@@ -16,7 +15,6 @@ import com.cloverexamples.stock.utils.Constant;
  */
 public class CloverBroadcastReceiver extends BroadcastReceiver {
     private static final String TAG = CloverBroadcastReceiver.class.getSimpleName();
-
 
     @Override
     public void onReceive(Context context, Intent intent) {
@@ -27,6 +25,4 @@ public class CloverBroadcastReceiver extends BroadcastReceiver {
             context.startService(it);
         }
     }
-
-
 }
