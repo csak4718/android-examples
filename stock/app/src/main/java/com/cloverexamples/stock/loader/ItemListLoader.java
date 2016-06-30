@@ -51,6 +51,7 @@ public class ItemListLoader extends AsyncTaskLoader<List<ItemEntry>> {
         // The superclass constructor will store a reference to the Application
         // Context instead, and can be retrieved with a call to getContext().
         super(context);
+//        TODO: get from activity
         setupAccount();
     }
 
@@ -69,6 +70,7 @@ public class ItemListLoader extends AsyncTaskLoader<List<ItemEntry>> {
 
         final List<ItemEntry> itemEntries = new ArrayList<>();
         try {
+            //        TODO: get from activity
             // call CloverAuth.authenticate to get the auth token
             mCloverAuth = CloverAuth.authenticate(getContext(), mAccount);
 
@@ -105,7 +107,7 @@ public class ItemListLoader extends AsyncTaskLoader<List<ItemEntry>> {
         }
 
         // Sort the list.
-        Collections.sort(itemEntries, ALPHA_COMPARATOR);
+//        Collections.sort(itemEntries, ALPHA_COMPARATOR);
 
         return itemEntries;
     }
@@ -169,7 +171,7 @@ public class ItemListLoader extends AsyncTaskLoader<List<ItemEntry>> {
         if (DEBUG) {
             Log.i(TAG, "+++ onStartLoading() called! +++");
         }
-
+//TODO: might have bug
         if (mItemEntries != null) {
             // Deliver any previously loaded data immediately.
             if (DEBUG) {
@@ -179,9 +181,9 @@ public class ItemListLoader extends AsyncTaskLoader<List<ItemEntry>> {
         }
 
         // Register the observers that will notify the Loader when changes are made.
-        if (mItemObserver == null) {
-            mItemObserver = new ItemObserver(this);
-        }
+//        if (mItemObserver == null) {
+//            mItemObserver = new ItemObserver(this);
+//        }
 
         if (takeContentChanged()) {
             // When the observer detects a new item, it will call
@@ -210,6 +212,10 @@ public class ItemListLoader extends AsyncTaskLoader<List<ItemEntry>> {
         // The Loader has been put in a stopped state, so we should attempt to
         // cancel the current load (if there is one).
         cancelLoad();
+        if (mItemEntries != null) {
+            releaseResources(mItemEntries);
+            mItemEntries = null;
+        }
 
         // Note that we leave the observer as is; Loaders in a stopped state
         // should still monitor the data source for changes so that the Loader
@@ -232,10 +238,10 @@ public class ItemListLoader extends AsyncTaskLoader<List<ItemEntry>> {
         }
 
         // The Loader is being reset, so we should stop monitoring for changes.
-        if (mItemObserver != null) {
-            getContext().unregisterReceiver(mItemObserver);
-            mItemObserver = null;
-        }
+//        if (mItemObserver != null) {
+//            getContext().unregisterReceiver(mItemObserver);
+//            mItemObserver = null;
+//        }
     }
 
     @Override
@@ -274,7 +280,7 @@ public class ItemListLoader extends AsyncTaskLoader<List<ItemEntry>> {
     /** (4) Observer which receives notifications when the data changes **/
     /*********************************************************************/
     // An observer to notify the Loader when items are updated.
-    private ItemObserver mItemObserver;
+//    private ItemObserver mItemObserver;
 
     /**************************/
     /** (5) Everything else  **/

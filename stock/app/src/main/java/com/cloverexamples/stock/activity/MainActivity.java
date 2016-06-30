@@ -44,10 +44,6 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
 
         setupAdapter();
-
-        // Initialize a Loader with id '1'. If the Loader with this id already
-        // exists, then the LoaderManager will reuse the existing Loader.
-        getSupportLoaderManager().initLoader(Constant.MAIN_ACTIVITY_LOADER_ID, null, this);
     }
 
     private void setupAdapter() {
@@ -59,6 +55,10 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     protected void onResume() {
         Log.d(TAG, "onResume");
         super.onResume();
+
+        // Initialize a Loader with id '1'. If the Loader with this id already
+        // exists, then the LoaderManager will reuse the existing Loader.
+        getSupportLoaderManager().initLoader(Constant.MAIN_ACTIVITY_LOADER_ID, null, this);
     }
 
     @Override
