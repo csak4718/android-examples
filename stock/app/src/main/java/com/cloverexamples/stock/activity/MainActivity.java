@@ -2,41 +2,57 @@ package com.cloverexamples.stock.activity;
 
 import android.accounts.Account;
 import android.app.Activity;
-import android.app.ActivityManager;
-import android.content.Context;
-import android.content.Intent;
-import android.content.SharedPreferences;
-import android.database.Cursor;
-import android.preference.PreferenceManager;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
+import android.support.v4.widget.SimpleCursorAdapter;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.ListView;
 import android.widget.Toast;
 
 import com.clover.sdk.util.CloverAccount;
-import com.clover.sdk.v3.order.OrderConnector;
 import com.cloverexamples.stock.R;
-import com.cloverexamples.stock.service.OrderListenService;
+import com.cloverexamples.stock.adapter.ItemListAdapter;
+import com.cloverexamples.stock.entry.ItemEntry;
+import com.cloverexamples.stock.loader.ItemListLoader;
 import com.cloverexamples.stock.utils.Constant;
 
-public class MainActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
+import java.util.ArrayList;
+import java.util.List;
+
+import butterknife.Bind;
+import butterknife.ButterKnife;
+
+public class MainActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<List<ItemEntry>> {
     private static final String TAG = MainActivity.class.getSimpleName();
     private static Activity mainActivity; // used in SettingActivity
     private Account mAccount;
 
 
+    private ItemListAdapter mAdapter;
+    @Bind(R.id.list_view) ListView mListView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        ButterKnife.bind(this);
 
         mainActivity = this;
         setupAccount();
 
 
+        setupAdapter();
 
+        // Initialize a Loader with id '1'. If the Loader with this id already
+        // exists, then the LoaderManager will reuse the existing Loader.
+        getSupportLoaderManager().initLoader(Constant.MAIN_ACTIVITY_LOADER_ID, null, this);
+    }
+
+    private void setupAdapter() {
+        mAdapter = new ItemListAdapter(this, new ArrayList<ItemEntry>());
+        mListView.setAdapter(mAdapter);
     }
 
     @Override
@@ -69,22 +85,22 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         }
     }
 
-    @Override
-    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-        return null;
-    }
-
-    @Override
-    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-
-    }
-
-    @Override
-    public void onLoaderReset(Loader<Cursor> loader) {
-
-    }
-
     public static Activity getMainActivity() {
         return mainActivity;
+    }
+
+    @Override
+    public Loader<List<ItemEntry>> onCreateLoader(int id, Bundle args) {
+        return new ItemListLoader(this);
+    }
+
+    @Override
+    public void onLoadFinished(Loader<List<ItemEntry>> loader, List<ItemEntry> data) {
+        mAdapter.setData(data);
+    }
+
+    @Override
+    public void onLoaderReset(Loader<List<ItemEntry>> loader) {
+        mAdapter.setData(null);
     }
 }

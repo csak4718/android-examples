@@ -133,8 +133,8 @@ public class StockService extends Service {
     private void postRequest(JSONObject itemStock, final String itemId, String url, Map<String, Integer> idToCount) {
         try {
             final int newQty = itemStock.has(Constant.JSON_QUANTITY)
-                    ? itemStock.getInt(Constant.JSON_QUANTITY) - idToCount.get(itemId)
-                    : - idToCount.get(itemId);
+                             ? itemStock.getInt(Constant.JSON_QUANTITY) - idToCount.get(itemId)
+                             : - idToCount.get(itemId);
             Log.d(TAG, "newQty: " + String.valueOf(newQty));
 
             SyncHttpClient postClient = new SyncHttpClient();

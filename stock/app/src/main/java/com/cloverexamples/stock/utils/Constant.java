@@ -14,9 +14,17 @@ public class Constant {
     public static final String JSON_QUANTITY = "quantity";
     public static final String JSON_ITEM_ID = "id";
     public static final String JSON_ITEM = "item";
+    public static final String JSON_ELEMENTS = "elements";
+    public static final String JSON_STOCK_COUNT = "stockCount";
+    public static final String JSON_NAME = "name";
+
 
     public static final String HTTP_HEADER_KEY_AUTH = "Authorization";
     public static final String HTTP_HEADER_VAL_AUTH = "Bearer ";
     public static final String HTTP_HEADER_KEY_CONTENT_TYPE = "Content-Type";
     public static final String HTTP_HEADER_VAL_CONTENT_TYPE = "application/json";
+
+    // The loader's unique id. Loader ids are specific to the Activity or
+    // Fragment in which they reside.
+    public static final int MAIN_ACTIVITY_LOADER_ID = 1;
 }

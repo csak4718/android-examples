@@ -26,6 +26,16 @@
             </intent-filter>
         </receiver>
 
+        <receiver
+            android:name=".receiver.ItemObserver"
+            android:enabled="true"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="com.clover.intent.action.PAYMENT_PROCESSED" />
+
+            </intent-filter>
+        </receiver>
+
         <activity android:name=".activity.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
