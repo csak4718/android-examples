@@ -244,6 +244,10 @@ public class StockService extends Service {
         mNotificationManager.notify(1, mBuilder.build());
     }
 
+//    public static CloverAuth.AuthResult getAuthResult() {
+//        return mCloverAuth;
+//    }
+
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {

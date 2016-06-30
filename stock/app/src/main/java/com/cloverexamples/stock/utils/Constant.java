@@ -5,6 +5,7 @@ package com.cloverexamples.stock.utils;
  */
 public class Constant {
     public static final String ERROR_NO_ACCOUNT = "No account";
+    public static final String ERROR_INVALID_INTEGER = "Invalid integer";
 
     public static final String PREF_DO_LISTEN = "doListen";
 

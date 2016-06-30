@@ -1,6 +1,8 @@
 package com.cloverexamples.stock.activity;
 
 import android.accounts.Account;
+import android.accounts.AuthenticatorException;
+import android.accounts.OperationCanceledException;
 import android.app.Activity;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
@@ -12,12 +14,14 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.clover.sdk.util.CloverAccount;
+import com.clover.sdk.util.CloverAuth;
 import com.cloverexamples.stock.R;
 import com.cloverexamples.stock.adapter.ItemListAdapter;
 import com.cloverexamples.stock.entry.ItemEntry;
 import com.cloverexamples.stock.loader.ItemListLoader;
 import com.cloverexamples.stock.utils.Constant;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 

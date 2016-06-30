@@ -35,6 +35,7 @@ import java.util.List;
 /**
  * Created by dewei.kung on 6/13/16.
  */
+//TODO: delete
 public class StockAPIService extends Service {
     private static final String TAG = StockAPIService.class.getSimpleName();
     private OrderConnector mOrderConnector;

@@ -39,7 +39,7 @@ public class ItemListLoader extends AsyncTaskLoader<List<ItemEntry>> {
     private List<ItemEntry> mItemEntries;
 
     private Account mAccount;
-    private CloverAuth.AuthResult mCloverAuth;
+    private static CloverAuth.AuthResult mCloverAuth;
     private String baseUrl = "https://sandbox.dev.clover.com/v3/merchants/";
     private String itemsUrl = "/items";
 
@@ -69,7 +69,6 @@ public class ItemListLoader extends AsyncTaskLoader<List<ItemEntry>> {
 
         final List<ItemEntry> itemEntries = new ArrayList<>();
         try {
-            //        TODO: get from activity
             // call CloverAuth.authenticate to get the auth token
             mCloverAuth = CloverAuth.authenticate(getContext(), mAccount);
 
@@ -270,5 +269,9 @@ public class ItemListLoader extends AsyncTaskLoader<List<ItemEntry>> {
                 Toast.makeText(getContext(), Constant.ERROR_NO_ACCOUNT, Toast.LENGTH_SHORT).show();
             }
         }
+    }
+
+    public static CloverAuth.AuthResult getAuthResult() {
+        return mCloverAuth;
     }
 }

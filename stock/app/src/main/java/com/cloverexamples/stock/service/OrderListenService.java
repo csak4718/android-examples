@@ -25,6 +25,7 @@ import java.util.List;
 /**
  * Created by dewei.kung on 6/8/16.
  */
+//TODO: delete
 public class OrderListenService extends Service implements OrderConnector.OnOrderUpdateListener2 {
     private static final String TAG = OrderListenService.class.getSimpleName();
     private OrderConnector mOrderConnector;
