@@ -11,7 +11,6 @@ import android.widget.Toast;
 import com.clover.sdk.util.CloverAccount;
 import com.clover.sdk.util.CloverAuth;
 import com.cloverexamples.stock.entry.ItemEntry;
-import com.cloverexamples.stock.receiver.ItemObserver;
 import com.cloverexamples.stock.utils.Constant;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.SyncHttpClient;
@@ -107,7 +106,7 @@ public class ItemListLoader extends AsyncTaskLoader<List<ItemEntry>> {
         }
 
         // Sort the list.
-//        Collections.sort(itemEntries, ALPHA_COMPARATOR);
+        Collections.sort(itemEntries, ALPHA_COMPARATOR);
 
         return itemEntries;
     }
@@ -171,35 +170,19 @@ public class ItemListLoader extends AsyncTaskLoader<List<ItemEntry>> {
         if (DEBUG) {
             Log.i(TAG, "+++ onStartLoading() called! +++");
         }
-//TODO: might have bug
-        if (mItemEntries != null) {
-            // Deliver any previously loaded data immediately.
-            if (DEBUG) {
-                Log.i(TAG, "+++ Delivering previously loaded data to the client...");
-            }
-            deliverResult(mItemEntries);
-        }
 
-        // Register the observers that will notify the Loader when changes are made.
-//        if (mItemObserver == null) {
-//            mItemObserver = new ItemObserver(this);
-//        }
-
-        if (takeContentChanged()) {
-            // When the observer detects a new item, it will call
-            // onContentChanged() on the Loader, which will cause the next call to
-            // takeContentChanged() to return true. If this is ever the case (or if
-            // the current data is null), we force a new load.
-            if (DEBUG) {
-                Log.i(TAG, "+++ A content change has been detected... so force load! +++");
-            }
-            forceLoad();
-        } else if (mItemEntries == null) {
+        if (mItemEntries == null) {
             // If the current data is null... then we should make it non-null.
             if (DEBUG) {
                 Log.i(TAG, "+++ The current data is data is null... so force load! +++");
             }
             forceLoad();
+        } else {
+            // Deliver any previously loaded data immediately.
+            if (DEBUG) {
+                Log.i(TAG, "+++ Delivering previously loaded data to the client...");
+            }
+            deliverResult(mItemEntries);
         }
     }
 
@@ -212,14 +195,11 @@ public class ItemListLoader extends AsyncTaskLoader<List<ItemEntry>> {
         // The Loader has been put in a stopped state, so we should attempt to
         // cancel the current load (if there is one).
         cancelLoad();
+
         if (mItemEntries != null) {
             releaseResources(mItemEntries);
             mItemEntries = null;
         }
-
-        // Note that we leave the observer as is; Loaders in a stopped state
-        // should still monitor the data source for changes so that the Loader
-        // will know to force a new load if it is ever started again.
     }
 
     @Override
@@ -230,18 +210,6 @@ public class ItemListLoader extends AsyncTaskLoader<List<ItemEntry>> {
 
         // Ensure the loader is stopped.
         onStopLoading();
-
-        // At this point we can release the resources associated with items.
-        if (mItemEntries != null) {
-            releaseResources(mItemEntries);
-            mItemEntries = null;
-        }
-
-        // The Loader is being reset, so we should stop monitoring for changes.
-//        if (mItemObserver != null) {
-//            getContext().unregisterReceiver(mItemObserver);
-//            mItemObserver = null;
-//        }
     }
 
     @Override
@@ -276,14 +244,8 @@ public class ItemListLoader extends AsyncTaskLoader<List<ItemEntry>> {
         // Loader should be released here.
     }
 
-    /*********************************************************************/
-    /** (4) Observer which receives notifications when the data changes **/
-    /*********************************************************************/
-    // An observer to notify the Loader when items are updated.
-//    private ItemObserver mItemObserver;
-
     /**************************/
-    /** (5) Everything else  **/
+    /** (4) Everything else  **/
     /**************************/
 
     /**
