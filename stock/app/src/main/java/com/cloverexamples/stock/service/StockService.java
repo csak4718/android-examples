@@ -9,9 +9,11 @@ import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.IBinder;
 import android.os.RemoteException;
+import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
@@ -158,8 +160,12 @@ public class StockService extends Service {
                     try {
                         counter--;
                         if (newQty < 4) {
-                            sendNotification(mInventoryConnector.getItem(itemId).getName(), newQty);
+                            SharedPreferences mPref = PreferenceManager.getDefaultSharedPreferences(StockService.this);
+                            if (mPref.getBoolean(Constant.PREF_DO_NOTIF, true)) {
+                                sendNotification(mInventoryConnector.getItem(itemId).getName(), newQty);
+                            }
                         }
+
                         if (counter == 0) {
                             finishService();
                         }

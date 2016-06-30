@@ -7,7 +7,8 @@ public class Constant {
     public static final String ERROR_NO_ACCOUNT = "No account";
     public static final String ERROR_INVALID_INTEGER = "Invalid integer";
 
-    public static final String PREF_DO_LISTEN = "doListen";
+    public static final String PREF_DO_TRACK = "doTrack";
+    public static final String PREF_DO_NOTIF = "doNotif";
 
     public static final String EXTRA_NOTIF_CONTENT = "notif content";
     public static final String EXTRA_NOTIF_TITLE = "notif title";
@@ -28,4 +29,8 @@ public class Constant {
     // The loader's unique id. Loader ids are specific to the Activity or
     // Fragment in which they reside.
     public static final int MAIN_ACTIVITY_LOADER_ID = 1;
+
+    public static final String TEXT_SAVE = "Save";
+    public static final String TEXT_STOCK = "Stock";
+    public static final String TEXT_SETTING = "Setting";
 }

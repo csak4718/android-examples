@@ -19,7 +19,7 @@ public class CloverBroadcastReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         SharedPreferences mPref = PreferenceManager.getDefaultSharedPreferences(context);
-        if (mPref.getBoolean(Constant.PREF_DO_LISTEN, true)) {
+        if (mPref.getBoolean(Constant.PREF_DO_TRACK, true)) {
             Intent it = new Intent(context, StockService.class);
             it.putExtra(Intents.EXTRA_CLOVER_ORDER_ID, intent.getStringExtra(Intents.EXTRA_CLOVER_ORDER_ID));
             context.startService(it);

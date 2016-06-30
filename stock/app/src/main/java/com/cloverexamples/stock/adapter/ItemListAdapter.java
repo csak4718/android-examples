@@ -88,7 +88,7 @@ public class ItemListAdapter extends BaseAdapter {
         helpBuilder.setView(wrapper);
 
         final int oldQty = itemEntry.getQuantity();
-        helpBuilder.setPositiveButton("Save", new DialogInterface.OnClickListener() {
+        helpBuilder.setPositiveButton(Constant.TEXT_SAVE, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 try {
@@ -137,7 +137,6 @@ public class ItemListAdapter extends BaseAdapter {
         // Create and show the dialog box
         AlertDialog helpDialog = helpBuilder.create();
         helpDialog.show();
-
     }
 
     public void setData(List<ItemEntry> data) {

@@ -1,27 +1,27 @@
 package com.cloverexamples.stock.activity;
 
 import android.accounts.Account;
-import android.accounts.AuthenticatorException;
-import android.accounts.OperationCanceledException;
 import android.app.Activity;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
-import android.support.v4.widget.SimpleCursorAdapter;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.ImageButton;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.clover.sdk.util.CloverAccount;
-import com.clover.sdk.util.CloverAuth;
 import com.cloverexamples.stock.R;
 import com.cloverexamples.stock.adapter.ItemListAdapter;
 import com.cloverexamples.stock.entry.ItemEntry;
 import com.cloverexamples.stock.loader.ItemListLoader;
 import com.cloverexamples.stock.utils.Constant;
+import com.cloverexamples.stock.utils.Utils;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,10 +32,11 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     private static final String TAG = MainActivity.class.getSimpleName();
     private static Activity mainActivity; // used in SettingActivity
     private Account mAccount;
-
+    private ActionBar mActionBar;
 
     private ItemListAdapter mAdapter;
-    @Bind(R.id.list_view) ListView mListView;
+    @Bind (R.id.list_view) ListView mListView;
+    ImageButton btnSetting;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,10 +45,28 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         ButterKnife.bind(this);
 
         mainActivity = this;
+        setupActionBar();
         setupAccount();
 
 
         setupAdapter();
+    }
+
+    private void setupActionBar() {
+        mActionBar = getSupportActionBar();
+        mActionBar.setDisplayShowCustomEnabled(true);
+        mActionBar.setCustomView(R.layout.main_activity_action_bar);
+        View actionBarView = mActionBar.getCustomView();
+        TextView txvTitle = (TextView) actionBarView.findViewById(R.id.txv_action_bar_title);
+        txvTitle.setText(Constant.TEXT_STOCK);
+
+        btnSetting = (ImageButton) findViewById(R.id.btn_setting);
+        btnSetting.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Utils.gotoSettingActivity(MainActivity.this);
+            }
+        });
     }
 
     private void setupAdapter() {

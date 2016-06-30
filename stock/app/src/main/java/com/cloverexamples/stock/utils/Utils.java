@@ -1,5 +1,10 @@
 package com.cloverexamples.stock.utils;
 
+import android.app.Activity;
+import android.content.Intent;
+
+import com.cloverexamples.stock.activity.SettingActivity;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -30,5 +35,10 @@ public class Utils {
             }
         }
         return sb.toString();
+    }
+
+    public static void gotoSettingActivity(Activity activity) {
+        Intent it = new Intent(activity, SettingActivity.class);
+        activity.startActivity(it);
     }
 }
