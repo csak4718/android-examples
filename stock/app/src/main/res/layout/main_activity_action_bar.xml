@@ -11,11 +11,11 @@
         android:layout_height="wrap_content" />
     <ImageButton
         android:id="@+id/btn_setting"
-        android:background="@null"
         android:scaleType="centerInside"
+        android:background="@null"
         android:src="@drawable/ic_settings_black_48dp"
-        android:padding="12dp"
+        android:layout_centerVertical="true"
         android:layout_alignParentEnd="true"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_width="48dp"
+        android:layout_height="48dp" />
 </RelativeLayout>
