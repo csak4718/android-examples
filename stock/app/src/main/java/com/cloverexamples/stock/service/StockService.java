@@ -76,7 +76,6 @@ public class StockService extends Service {
             try {
                 // call CloverAuth.authenticate to get the auth token
                 mCloverAuth = CloverAuth.authenticate(StockService.this.getApplicationContext(), mAccount);
-//                Log.d(TAG, mCloverAuth.authToken);
 
                 final Map<String, Integer> idToCount = new HashMap<>();
                 Order order = mOrderConnector.getOrder(orderId[0]);
@@ -195,7 +194,6 @@ public class StockService extends Service {
 
     private void setupAccount() {
         if (mAccount == null) {
-            Log.d(TAG, "mAccount is null. call getAccount");
             mAccount = CloverAccount.getAccount(this);
 
             if (mAccount == null) {
@@ -249,10 +247,6 @@ public class StockService extends Service {
                 (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         mNotificationManager.notify(1, mBuilder.build());
     }
-
-//    public static CloverAuth.AuthResult getAuthResult() {
-//        return mCloverAuth;
-//    }
 
     @Nullable
     @Override

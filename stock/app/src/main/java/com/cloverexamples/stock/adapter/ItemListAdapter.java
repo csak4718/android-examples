@@ -72,8 +72,8 @@ public class ItemListAdapter extends BaseAdapter {
 
     private void showEditDialog(final ItemEntry itemEntry){
         //Create a new Dialog Box
-        AlertDialog.Builder helpBuilder = new AlertDialog.Builder(mMainActivity);
-        helpBuilder.setTitle("Edit " + itemEntry.getItemName() + " Quantity");
+        AlertDialog.Builder builder = new AlertDialog.Builder(mMainActivity);
+        builder.setTitle("Edit " + itemEntry.getItemName() + " Quantity");
 
         // The Linear Layout that holds EditText
         LinearLayout wrapper = new LinearLayout(mMainActivity);
@@ -85,10 +85,10 @@ public class ItemListAdapter extends BaseAdapter {
         wrapper.addView(edtQuantity);
 
         //Add the linear layout to the Alert Dialog
-        helpBuilder.setView(wrapper);
+        builder.setView(wrapper);
 
         final int oldQty = itemEntry.getQuantity();
-        helpBuilder.setPositiveButton(Constant.TEXT_SAVE, new DialogInterface.OnClickListener() {
+        builder.setPositiveButton(Constant.TEXT_SAVE, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 try {
@@ -135,8 +135,8 @@ public class ItemListAdapter extends BaseAdapter {
         });
 
         // Create and show the dialog box
-        AlertDialog helpDialog = helpBuilder.create();
-        helpDialog.show();
+        AlertDialog dialog = builder.create();
+        dialog.show();
     }
 
     public void setData(List<ItemEntry> data) {

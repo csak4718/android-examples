@@ -20,10 +20,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
-import java.text.Collator;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 import cz.msebera.android.httpclient.Header;
@@ -44,13 +42,12 @@ public class ItemListLoader extends AsyncTaskLoader<List<ItemEntry>> {
     private String itemsUrl = "/items";
 
     public ItemListLoader(Context context) {
-        // Loaders may be used across multiple Activitys (assuming they aren't
+        // Loaders may be used across multiple Activities (assuming they aren't
         // bound to the LoaderManager), so NEVER hold a reference to the context
         // directly. Doing so will cause you to leak an entire Activity's context.
         // The superclass constructor will store a reference to the Application
         // Context instead, and can be retrieved with a call to getContext().
         super(context);
-//        TODO: get from activity
         setupAccount();
     }
 
@@ -105,7 +102,7 @@ public class ItemListLoader extends AsyncTaskLoader<List<ItemEntry>> {
         }
 
         // Sort the list.
-        Collections.sort(itemEntries, ALPHA_COMPARATOR);
+        Collections.sort(itemEntries, Constant.ITEM_ALPHA_COMPARATOR);
 
         return itemEntries;
     }
@@ -151,7 +148,7 @@ public class ItemListLoader extends AsyncTaskLoader<List<ItemEntry>> {
             super.deliverResult(itemEntries);
         }
 
-        // Invalidate the old data as we don't need it any more.
+        // Invalidate the old data as we don't need it anymore.
         if (oldItemEntries != null && oldItemEntries != itemEntries) {
             if (DEBUG) {
                 Log.i(TAG, "+++ Releasing any old data associated with this Loader. +++");
@@ -247,22 +244,8 @@ public class ItemListLoader extends AsyncTaskLoader<List<ItemEntry>> {
     /** (4) Everything else  **/
     /**************************/
 
-    /**
-     * Performs alphabetical comparison of ItemEntry objects. This is
-     * used to sort queried data in loadInBackground.
-     */
-    private static final Comparator<ItemEntry> ALPHA_COMPARATOR = new Comparator<ItemEntry>() {
-        Collator sCollator = Collator.getInstance();
-
-        @Override
-        public int compare(ItemEntry object1, ItemEntry object2) {
-            return sCollator.compare(object1.getItemName(), object2.getItemName());
-        }
-    };
-
     private void setupAccount() {
         if (mAccount == null) {
-            Log.d(TAG, "mAccount is null. call getAccount");
             mAccount = CloverAccount.getAccount(getContext());
 
             if (mAccount == null) {

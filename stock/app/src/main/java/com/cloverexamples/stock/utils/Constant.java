@@ -1,5 +1,10 @@
 package com.cloverexamples.stock.utils;
 
+import com.cloverexamples.stock.entry.ItemEntry;
+
+import java.text.Collator;
+import java.util.Comparator;
+
 /**
  * Created by dewei.kung on 6/8/16.
  */
@@ -33,4 +38,16 @@ public class Constant {
     public static final String TEXT_SAVE = "Save";
     public static final String TEXT_STOCK = "Stock";
     public static final String TEXT_SETTING = "Setting";
+
+    /**
+     * Performs alphabetical comparison of ItemEntry objects.
+     */
+    public static final Comparator<ItemEntry> ITEM_ALPHA_COMPARATOR = new Comparator<ItemEntry>() {
+        Collator mCollator = Collator.getInstance();
+
+        @Override
+        public int compare(ItemEntry object1, ItemEntry object2) {
+            return mCollator.compare(object1.getItemName(), object2.getItemName());
+        }
+    };
 }
