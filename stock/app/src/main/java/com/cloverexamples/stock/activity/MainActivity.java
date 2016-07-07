@@ -1,6 +1,9 @@
 package com.cloverexamples.stock.activity;
 
 import android.accounts.Account;
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.support.v7.app.ActionBar;
@@ -21,6 +24,7 @@ import com.cloverexamples.stock.loader.ItemListLoader;
 import com.cloverexamples.stock.utils.Constant;
 import com.cloverexamples.stock.utils.Utils;
 
+import java.net.InetAddress;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -46,6 +50,13 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         setupAccount();
 
         setupAdapter();
+    }
+
+    private boolean isNetworkAvailable() {
+        ConnectivityManager connectivityManager
+                = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
 
     private void setupActionBar() {
@@ -75,9 +86,13 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         Log.d(TAG, "onResume");
         super.onResume();
 
-        // Initialize a Loader with id 'Constant.MAIN_ACTIVITY_LOADER_ID'. If the Loader with this id already
-        // exists, then the LoaderManager will reuse the existing Loader.
-        getSupportLoaderManager().initLoader(Constant.MAIN_ACTIVITY_LOADER_ID, null, this);
+        if (isNetworkAvailable()) {
+            // Initialize a Loader with id 'Constant.MAIN_ACTIVITY_LOADER_ID'. If the Loader with this id already
+            // exists, then the LoaderManager will reuse the existing Loader.
+            getSupportLoaderManager().initLoader(Constant.MAIN_ACTIVITY_LOADER_ID, null, this);
+        } else {
+            Toast.makeText(this, "Internet not found! Please Check connection.", Toast.LENGTH_SHORT).show();
+        }
     }
 
     private void setupAccount() {

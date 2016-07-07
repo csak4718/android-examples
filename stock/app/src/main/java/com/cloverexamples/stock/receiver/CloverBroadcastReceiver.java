@@ -7,6 +7,7 @@ import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
 import com.clover.sdk.v1.Intents;
+import com.cloverexamples.stock.service.StockAPIService;
 import com.cloverexamples.stock.service.StockService;
 import com.cloverexamples.stock.utils.Constant;
 
@@ -20,7 +21,7 @@ public class CloverBroadcastReceiver extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
         SharedPreferences mPref = PreferenceManager.getDefaultSharedPreferences(context);
         if (mPref.getBoolean(Constant.PREF_DO_TRACK, true)) {
-            Intent it = new Intent(context, StockService.class);
+            Intent it = new Intent(context, StockAPIService.class);
             it.putExtra(Intents.EXTRA_CLOVER_ORDER_ID, intent.getStringExtra(Intents.EXTRA_CLOVER_ORDER_ID));
             context.startService(it);
         }
