@@ -78,6 +78,7 @@ public class StockAPIService extends Service {
                     }
                 }
 
+                boolean someItemAlmostRunOut = false;
                 for (String itemId: idToCount.keySet()) {
                     ItemStock itemStock = mInventoryConnector.getItem(itemId).getItemStock();
 //                    TODO bug: ItemStock is null, StockCount is null as well
@@ -89,11 +90,14 @@ public class StockAPIService extends Service {
                     }
 
                     Log.d(TAG, "newQty: " + String.valueOf(itemStock.getQuantity()));
-                    if (itemStock.getQuantity() < 4.0) {
-                        SharedPreferences mPref = PreferenceManager.getDefaultSharedPreferences(StockAPIService.this);
-                        if (mPref.getBoolean(Constant.PREF_DO_NOTIF, true)) {
-                            sendNotification(mInventoryConnector.getItem(itemId).getName(), itemStock.getQuantity());
-                        }
+                    if (itemStock.getQuantity() < Constant.QUANTITY_THRESHOLD) {
+                        someItemAlmostRunOut = true;
+                    }
+                }
+                if (someItemAlmostRunOut) {
+                    SharedPreferences mPref = PreferenceManager.getDefaultSharedPreferences(StockAPIService.this);
+                    if (mPref.getBoolean(Constant.PREF_DO_NOTIF, true)) {
+                        sendNotification();
                     }
                 }
 
@@ -177,15 +181,15 @@ public class StockAPIService extends Service {
         stopSelf();
     }
 
-    private void sendNotification(String itemName, double newQty) {
+    private void sendNotification() {
         PendingIntent contentIntent = PendingIntent.getActivity(this, 0,
                 new Intent(this, MainActivity.class), 0);
 
         NotificationCompat.Builder mBuilder =
                 new NotificationCompat.Builder(this)
-                        .setSmallIcon(R.drawable.app_icon)
-                        .setContentTitle(itemName)
-                        .setContentText("only " + String.valueOf(newQty) + " left!");
+                        .setSmallIcon(R.drawable.notif_icon)
+                        .setContentTitle(Constant.TEXT_ALMOST_OUT_OF_STOCK)
+                        .setContentText(Constant.TEXT_CHECK_STOCK_REMINDER);
         mBuilder.setContentIntent(contentIntent);
         mBuilder.setDefaults(Notification.DEFAULT_SOUND);
         mBuilder.setAutoCancel(true);

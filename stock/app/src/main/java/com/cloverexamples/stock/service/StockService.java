@@ -237,7 +237,7 @@ public class StockService extends Service {
 
         NotificationCompat.Builder mBuilder =
                 new NotificationCompat.Builder(this)
-                        .setSmallIcon(R.drawable.app_icon)
+                        .setSmallIcon(R.drawable.notif_icon)
                         .setContentTitle(itemName)
                         .setContentText("only " + String.valueOf(newQty) + " left!");
         mBuilder.setContentIntent(contentIntent);

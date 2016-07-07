@@ -57,8 +57,15 @@ public class ItemListAdapter extends BaseAdapter {
         final ItemEntry itemEntry = mItemEntries.get(position);
         TextView nameTxv = (TextView) convertView.findViewById(R.id.txv_item_name);
         nameTxv.setText(itemEntry.getItemName());
+
         TextView quantityTxv = (TextView) convertView.findViewById(R.id.txv_item_quantity);
         quantityTxv.setText(String.valueOf(itemEntry.getQuantity()));
+        if (itemEntry.getQuantity() < Constant.QUANTITY_THRESHOLD) {
+            quantityTxv.setTextColor(mMainActivity.getResources().getColor(R.color.red));
+        } else {
+            quantityTxv.setTextColor(mMainActivity.getResources().getColor(R.color.gray));
+        }
+
         Button editBtn = (Button) convertView.findViewById(R.id.btn_edit);
         editBtn.setOnClickListener(new View.OnClickListener() {
             @Override

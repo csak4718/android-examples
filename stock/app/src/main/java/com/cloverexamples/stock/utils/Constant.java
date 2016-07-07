@@ -11,6 +11,7 @@ import java.util.Comparator;
 public class Constant {
     public static final String ERROR_NO_ACCOUNT = "No account";
     public static final String ERROR_INVALID_INTEGER = "Invalid integer";
+    public static final String ERROR_NO_NETWORK = "Internet not found! Please Check connection.";
 
     public static final String PREF_DO_TRACK = "doTrack";
     public static final String PREF_DO_NOTIF = "doNotif";
@@ -33,11 +34,15 @@ public class Constant {
 
     // The loader's unique id. Loader ids are specific to the Activity or
     // Fragment in which they reside.
-    public static final int MAIN_ACTIVITY_LOADER_ID = 1;
+    public static final int MAIN_FRAGMENT_LOADER_ID = 1;
+
+    public static final double QUANTITY_THRESHOLD = 4.0;
 
     public static final String TEXT_SAVE = "Save";
     public static final String TEXT_STOCK = "Stock";
     public static final String TEXT_SETTING = "Setting";
+    public static final String TEXT_ALMOST_OUT_OF_STOCK = "Some item almost runs out";
+    public static final String TEXT_CHECK_STOCK_REMINDER = "Remember to check the stock";
 
     /**
      * Performs alphabetical comparison of ItemEntry objects.
