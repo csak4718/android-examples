@@ -7,15 +7,26 @@ import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Handler;
 import android.os.IBinder;
+import android.os.RemoteException;
 import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 import android.widget.Toast;
 
 import com.clover.sdk.util.CloverAccount;
+import com.clover.sdk.v1.BindingException;
+import com.clover.sdk.v1.ClientException;
+import com.clover.sdk.v1.ServiceException;
+
+import com.clover.sdk.v3.base.Reference;
+import com.clover.sdk.v3.order.IOnOrderUpdateListener2;
+import com.clover.sdk.v3.order.LineItem;
+import com.clover.sdk.v3.order.Order;
 import com.clover.sdk.v3.order.OrderConnector;
+import com.clover.sdk.v3.payments.Refund;
 import com.cloverexamples.stock.R;
 import com.cloverexamples.stock.activity.MainActivity;
 import com.cloverexamples.stock.utils.Constant;
@@ -77,8 +88,9 @@ public class OrderListenService extends Service implements OrderConnector.OnOrde
         Log.d(TAG, "onDestroy");
 
 //        Release resource
-        disconnect();
-        mAccount = null;
+//        disconnect();
+//        mAccount = null;
+//        stopSelf();
         super.onDestroy();
     }
 
@@ -87,9 +99,10 @@ public class OrderListenService extends Service implements OrderConnector.OnOrde
         Log.d(TAG, "onPaymentProcessed");
 //        Toast.makeText(this, "onPaymentProcessed", Toast.LENGTH_SHORT).show();
 //        Toast.makeText(this.getApplicationContext(), "onPaymentProcessed", Toast.LENGTH_SHORT).show();
-//        sendNotification(this, orderId);
+        sendNotification(this, orderId);
 //        sendNotification(getApplicationContext(), orderId);
-        broadcast(orderId);
+
+//        broadcast(orderId);
     }
 
     private void broadcast(String orderId) {
@@ -99,22 +112,25 @@ public class OrderListenService extends Service implements OrderConnector.OnOrde
         sendBroadcast(it);
     }
 
-//    private void sendNotification(Context context, String orderId) {
-//        PendingIntent contentIntent = PendingIntent.getActivity(context, 0,
-//                new Intent(context, MainActivity.class), 0);
-//
-//        NotificationCompat.Builder mBuilder =
-//                new NotificationCompat.Builder(context)
-//                        .setSmallIcon(R.drawable.app_icon)
-//                        .setContentTitle("Stock notification")
-//                        .setContentText(orderId);
-//        mBuilder.setContentIntent(contentIntent);
-//        mBuilder.setDefaults(Notification.DEFAULT_SOUND);
-//        mBuilder.setAutoCancel(true);
-//        NotificationManager mNotificationManager =
-//                (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-//        mNotificationManager.notify(1, mBuilder.build());
-//    }
+    private void sendNotification(Context context, String orderId) {
+        if (context == null) {
+            Log.d(TAG, "context is null");
+        }
+        PendingIntent contentIntent = PendingIntent.getActivity(context, 0,
+                new Intent(context, MainActivity.class), 0);
+
+        NotificationCompat.Builder mBuilder =
+                new NotificationCompat.Builder(context)
+                        .setSmallIcon(R.drawable.notif_icon)
+                        .setContentTitle("Stock notification")
+                        .setContentText(orderId);
+        mBuilder.setContentIntent(contentIntent);
+        mBuilder.setDefaults(Notification.DEFAULT_SOUND);
+        mBuilder.setAutoCancel(true);
+        NotificationManager mNotificationManager =
+                (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+        mNotificationManager.notify(1, mBuilder.build());
+    }
 
     @Nullable
     @Override
@@ -174,16 +190,50 @@ public class OrderListenService extends Service implements OrderConnector.OnOrde
 
     @Override
     public void onLineItemExchanged(String orderId, String oldLineItemId, String newLineItemId) {
-
+        Log.d(TAG, "onLineItemExchanged");
     }
 
     @Override
-    public void onRefundProcessed(String orderId, String refundId) {
-
+    public void onRefundProcessed(final String orderId, final String refundId) {
+        Log.d(TAG, "onRefundProcessed");
+//        new AsyncTask<Void, Void, Void> () {
+//
+//            @Override
+//            protected Void doInBackground(Void... params) {
+//                try {
+//                    Log.d(TAG, "doInBackground");
+//                    Order order = mOrderConnector.getOrder(orderId);
+//                    List<LineItem> lineItems = order.getLineItems();
+//                    for (LineItem lineItem: lineItems) {
+//                        Log.d(TAG, lineItem.getName());
+//                    }
+//
+//
+//                    List<Refund> refunds = order.getRefunds();
+//                    List<Reference> items = refunds.get(0).getLineItems(); // item id doesn't match
+//
+//
+//                    Order refundOrder = mOrderConnector.getOrder(refundId); // return null
+//                    List<LineItem> refundLineItems = refundOrder.getLineItems();
+//                    for (LineItem lineItem: refundLineItems) {
+//                        Log.d(TAG, lineItem.getName());
+//                    }
+//                } catch (RemoteException e) {
+//                    e.printStackTrace();
+//                } catch (ClientException e) {
+//                    e.printStackTrace();
+//                } catch (ServiceException e) {
+//                    e.printStackTrace();
+//                } catch (BindingException e) {
+//                    e.printStackTrace();
+//                }
+//                return null;
+//            }
+//        }.execute();
     }
 
     @Override
     public void onCreditProcessed(String orderId, String creditId) {
-
+        Log.d(TAG, "onCreditProcessed");
     }
 }

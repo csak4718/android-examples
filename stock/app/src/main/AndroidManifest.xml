@@ -31,6 +31,12 @@
             <intent-filter>
                 <action android:name="com.clover.intent.action.PAYMENT_PROCESSED" />
             </intent-filter>
+            <intent-filter>
+                <action android:name="com.clover.intent.action.REFUND_PROCESSED" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="com.clover.intent.action.EXCHANGED_PROCESSED" />
+            </intent-filter>
         </receiver>
 
         <activity android:name=".activity.MainActivity">

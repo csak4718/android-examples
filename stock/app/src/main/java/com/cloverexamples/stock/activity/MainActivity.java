@@ -2,6 +2,7 @@ package com.cloverexamples.stock.activity;
 
 import android.accounts.Account;
 import android.content.Context;
+import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.support.v4.app.FragmentTransaction;
@@ -18,11 +19,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.clover.sdk.util.CloverAccount;
+import com.clover.sdk.v1.Intents;
 import com.cloverexamples.stock.R;
 import com.cloverexamples.stock.adapter.ItemListAdapter;
 import com.cloverexamples.stock.entry.ItemEntry;
 import com.cloverexamples.stock.fragment.MainFragment;
 import com.cloverexamples.stock.loader.ItemListLoader;
+import com.cloverexamples.stock.service.OrderListenService;
 import com.cloverexamples.stock.utils.Constant;
 import com.cloverexamples.stock.utils.Utils;
 
@@ -46,5 +49,13 @@ public class MainActivity extends AppCompatActivity {
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.add(R.id.frame_content, mainFragment);
         transaction.commit();
+
+        //TODO do experiments
+//        Intent it = new Intent(this, OrderListenService.class);
+//        startService(it);
+//
+//        String a = Intents.EXTRA_REFUND;
+//        String b = Intents.ACTION_REFUND;
+        
     }
 }

@@ -18,6 +18,14 @@ public class Constant {
 
     public static final String EXTRA_NOTIF_CONTENT = "notif content";
     public static final String EXTRA_NOTIF_TITLE = "notif title";
+    public static final String EXTRA_INTENT_ACTION_TYPE = "intent action type";
+    public static final String EXTRA_REFUND_LINE_ITEM_IDS = "com.clover.intent.extra.LINE_ITEM_IDS";
+    public static final String EXTRA_OLD_LINE_ITEM_ID = "com.clover.intent.extra.OLD_LINE_ITEM_ID";
+    public static final String EXTRA_NEW_LINE_ITEM_ID = "com.clover.intent.extra.NEW_LINE_ITEM_ID";
+
+    public static final String INTENT_ACTION_PAYMENT = "com.clover.intent.action.PAYMENT_PROCESSED";
+    public static final String INTENT_ACTION_REFUND = "com.clover.intent.action.REFUND_PROCESSED";
+    public static final String INTENT_ACTION_EXCHANGED = "com.clover.intent.action.EXCHANGED_PROCESSED";
 
     public static final String JSON_QUANTITY = "quantity";
     public static final String JSON_ITEM_ID = "id";
